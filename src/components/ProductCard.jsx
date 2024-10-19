@@ -23,26 +23,26 @@ const ProductCard = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-3 gap-4">
       {products.map((data) => (
-        <div key={data.id} className="bg-white p-0 rounded-lg">
+        <div key={data.id} className="min-w-sm bg-white">
           {/* Product Image */}
           <img
             src={data.imageUrls[0]}
             alt={data.name}
-            className="w-full h-370 object-cover object-center"
+            className="w-full h-96 object-cover object-center mb-4"
           />
 
           {/* Product Name */}
-          <h2 className="text-lg font-bold text-gray-900">{data.name}</h2>
+          <h2 className="text-xl font-semibold text-gray-800">{data.name}</h2>
 
           {/* Product description */}
-          <p className="text-lg font-bold text-gray-900">{data.description}</p>
+          <p className="text-gray-600 text-sm mt-2">{data.description}</p>
 
           {/* Star Ratings */}
           <div className="flex items-center mt-2">
             {[...Array(5)].map((_, index) =>
-              index < data.rating ? (
+              index < data.ratings ? (
                 <StarIcon
                   key={index}
                   className="text-yellow-400"
@@ -59,9 +59,11 @@ const ProductCard = () => {
           </div>
 
           {/* Product Price */}
-          <span className="mt-4 flex items-center justify-between text-lg font-semibold text-gray-800">
-            THB {data.price}
-          </span>
+          <div className="mt-4 flex justify-end">
+            <span className="text-lg font-semibold text-gray-900">
+              THB {data.price}
+            </span>
+          </div>
         </div>
       ))}
     </div>
