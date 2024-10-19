@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import StarRateIcon from "@mui/icons-material/StarRate";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const ProductCard = () => {
   const [products, setProducts] = useState([]);
@@ -33,21 +34,28 @@ const ProductCard = () => {
           />
 
           {/* Product Name */}
-          <h2 className="text-xl font-semibold text-gray-800">{data.name}</h2>
+          <h2 className="text-lg font-bold text-gray-900">{data.name}</h2>
 
           {/* Product description */}
-          <p className="text-gray-600 text-sm mt-2">{data.description}</p>
+          <p className="text-lg font-bold text-gray-900">{data.description}</p>
 
           {/* Star Ratings */}
-          <div className="flex items-center mt-4">
-            {[...Array(5)].map((_, index) => (
-              <StarRateIcon
-                key={index}
-                className={`h-5 w-5 ${
-                  index < data.rating ? "text-yellow-500" : "text-gray-300"
-                }`}
-              />
-            ))}
+          <div className="flex items-center mt-2">
+            {[...Array(5)].map((_, index) =>
+              index < data.rating ? (
+                <StarIcon
+                  key={index}
+                  className="text-yellow-400"
+                  fontSize="small"
+                />
+              ) : (
+                <StarBorderIcon
+                  key={index}
+                  className="text-gray-300"
+                  fontSize="small"
+                />
+              )
+            )}
           </div>
 
           {/* Product Price */}
