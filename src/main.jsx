@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
+import Womencloth from "./page/Woman-cloth.jsx";
+
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const router = createBrowserRouter([
@@ -16,6 +18,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />{" "}
   </StrictMode>
 );
