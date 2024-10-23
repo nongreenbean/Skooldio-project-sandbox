@@ -69,8 +69,10 @@ const ProductCard = ({
       </div>
 
       {/* ส่วนแสดงรายละเอียดสินค้า */}
-      <div className="mt-4 flex flex-col">
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+      <div className="mt-4 flex flex-col px-4 pb-4">
+        <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+          {title}
+        </h3>
         <p className="mt-1 text-sm text-gray-500 line-clamp-2">{description}</p>
 
         {/* แสดงคะแนนรีวิว */}
