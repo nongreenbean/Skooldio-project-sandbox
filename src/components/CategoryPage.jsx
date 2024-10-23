@@ -4,6 +4,7 @@ import { useCategories } from "../context/CategoryContext";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Sidebar from "./Sidebar";
 import ProductGrid from "./ProductGrid";
+import ProductCard from "./ProductCard";
 
 const CategoryPage = () => {
   const {
