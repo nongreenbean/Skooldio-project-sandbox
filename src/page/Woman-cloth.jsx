@@ -10,7 +10,7 @@ function WomanCloth() {
       setLoading(true);
       try {
         const res = await fetch(
-          "https://api.storefront.wdb.skooldio.dev/products"
+          "https://api.storefront.wdb.skooldio.dev/products?ladies"
         );
         const resp = await res.json();
         setProducts(resp.data);
@@ -33,12 +33,13 @@ function WomanCloth() {
         {products.map((data) => (
           <ProductCard
             key={data.id}
-            imageUrl={data.imageUrls[1]}
+            imageUrl={data.imageUrls}
             title={data.name}
             description={data.description}
             price={data.price}
+            promotionalPrice={data.promotionalPrice}
             rating={data.ratings}
-            currency="THB"
+            categories={data.categories}
           />
         ))}
       </div>

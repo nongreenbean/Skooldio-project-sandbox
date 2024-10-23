@@ -1,95 +1,102 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { Star, StarHalf } from "lucide-react";
 
 const ProductCard = ({
   imageUrl,
   title,
   description,
   price,
-  rating = 4,
-  currency = "THB",
+  rating,
+  promotionalPrice,
+  categories,
 }) => {
-  const [imageError, setImageError] = useState(false);
+  // แปลงราคาเป็นรูปแบบเงินบาทไทย
+  const formatPrice = (amount) => {
+    return `฿${amount.toLocaleString()}`;
+  };
 
-  const renderStars = () => {
+  // คำนวณเปอร์เซ็นต์ส่วนลด
+  const getDiscountPercentage = () => {
+    if (promotionalPrice && price > promotionalPrice) {
+      return Math.round(((price - promotionalPrice) / price) * 100);
+    }
+    return 0;
+  };
+
+  // สร้างดาวแสดงคะแนนรีวิว
+  const renderRatingStars = () => {
     const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
+    const fullStars = Math.floor(rating); // ดาวเต็ม
+    const hasHalfStar = rating % 1 >= 0.5; // เช็คว่ามีครึ่งดาวหรือไม่
 
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
+        // ดาวเต็ม
         stars.push(
-          <svg
-            key={i}
-            className="w-5 h-5 text-yellow-400"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
+          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
         );
       } else if (i === fullStars && hasHalfStar) {
+        // ครึ่งดาว
         stars.push(
-          <div key={i} className="relative w-5 h-5">
-            <svg
-              className="absolute w-5 h-5 text-gray-300"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <div className="absolute w-2.5 h-5 overflow-hidden">
-              <svg
-                className="w-5 h-5 text-yellow-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </div>
-          </div>
+          <StarHalf
+            key={i}
+            className="w-4 h-4 fill-yellow-400 text-yellow-400"
+          />
         );
       } else {
-        stars.push(
-          <svg
-            key={i}
-            className="w-5 h-5 text-gray-300"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        );
+        // ดาวเปล่า
+        stars.push(<Star key={i} className="w-4 h-4 text-gray-300" />);
       }
     }
     return stars;
   };
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
-      <div className="relative aspect-[4/5] w-full">
-        {imageError ? (
-          <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-            <span className="text-gray-400">Image not available</span>
+    <div className="relative max-w-sm rounded overflow-hidden  bg-white hover:shadow-xl transition-shadow duration-300">
+      {/* ส่วนแสดงรูปภาพ */}
+      <div className="aspect-square w-full overflow-hidden  bg-gray-100 relative">
+        <img
+          src={imageUrl?.[0] || "/api/placeholder/400/400"}
+          alt={title}
+          className="h-full w-full object-cover object-center group-hover:opacity-75"
+        />
+        {/* แสดงป้ายส่วนลด (ถ้ามี) */}
+        {getDiscountPercentage() > 0 && (
+          <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-sm font-semibold rounded">
+            ลด {getDiscountPercentage()}%
           </div>
-        ) : (
-          <img
-            className="absolute inset-0 w-full h-full object-cover"
-            src={imageUrl}
-            alt={title}
-            onError={() => setImageError(true)}
-          />
         )}
       </div>
-      <div className="px-6 py-4">
-        <h3 className="font-bold text-xl mb-2 line-clamp-1">{title}</h3>
-        <p className="text-gray-700 text-base line-clamp-2">{description}</p>
-        <div className="flex items-center mt-2">
-          {renderStars()}
-          <span className="ml-2 text-gray-600">{rating.toFixed(1)}</span>
+
+      {/* ส่วนแสดงรายละเอียดสินค้า */}
+      <div className="mt-4 flex flex-col">
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="mt-1 text-sm text-gray-500 line-clamp-2">{description}</p>
+
+        {/* แสดงคะแนนรีวิว */}
+        <div className="mt-2 flex items-center gap-1">
+          {renderRatingStars()}
+          <span className="ml-1 text-sm text-gray-500">
+            {rating?.toFixed(1)}
+          </span>
         </div>
-        <div className="mt-4 font-bold text-xl">
-          {currency} {price.toLocaleString()}
+
+        {/* แสดงราคา */}
+        <div className="flex flex-col items-end">
+          {promotionalPrice && promotionalPrice < price ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 line-through">
+                {formatPrice(price)}
+              </span>
+              <span className="text-lg font-medium text-red-500">
+                {formatPrice(promotionalPrice)}
+              </span>
+            </div>
+          ) : (
+            <span className="text-lg font-medium text-gray-900">
+              {formatPrice(price)}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -100,9 +107,11 @@ ProductCard.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  categories: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   rating: PropTypes.number,
   currency: PropTypes.string,
+  promotionalPrice: PropTypes.number,
 };
 
 export default ProductCard;
