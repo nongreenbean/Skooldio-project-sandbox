@@ -8,7 +8,6 @@ const ProductCard = ({
   price,
   rating,
   promotionalPrice,
-  categories,
 }) => {
   // แปลงราคาเป็นรูปแบบเงินบาทไทย
   const formatPrice = (amount) => {
