@@ -1,75 +1,77 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Featured product</h2>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/men" className="hover:text-gray-300">
-                Men
-              </Link>
-            </li>
-            <li>
-              <Link to="/women" className="hover:text-gray-300">
-                Ladies
-              </Link>
-            </li>
-            <li>
-              <Link to="/men-shoes" className="hover:text-gray-300">
-                Shoes
-              </Link>
-            </li>
-            <li>
-              <Link to="/men-accessories" className="hover:text-gray-300">
-                Accessories
-              </Link>
-            </li>
-          </ul>
-        </div>
+    <footer className="bg-gray-900 text-white py-8">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Featured Products Section */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Featured product</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/men" className="text-gray-300 hover:text-white">
+                  Men
+                </Link>
+              </li>
+              <li>
+                <Link to="/women" className="text-gray-300 hover:text-white">
+                  Ladies
+                </Link>
+              </li>
+              <li>
+                <Link to="/shoes" className="text-gray-300 hover:text-white">
+                  Shoes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/accessories"
+                  className="text-gray-300 hover:text-white"
+                >
+                  Accessories
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Register with us</h2>
-          <p className="mb-4">
-            Sign up now and get 20% off your first purchase!
-          </p>
-          <button className="bg-white text-gray-900 px-4 py-2 rounded flex items-center hover:bg-gray-200 transition-colors">
-            Sign up now
-            <ArrowRightIcon className="ml-2 w-4 h-4" />
-          </button>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Customer services</h2>
-          <p className="mb-2">
-            MBK Tower 20th Floor, 444, Phaya Thai Rd, Wang Mai, Pathum Wan,
-            Bangkok 10330
-          </p>
-          <p className="mb-4">Email: jane.doe@realmail.com</p>
-          <div className="flex">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-grow px-4 py-2 rounded-l text-gray-900"
-            />
-            <button className="bg-lime-400 text-gray-900 px-4 py-2 rounded-r hover:bg-lime-500 transition-colors">
-              Subscribe
+          {/* Registration Section */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Register with us</h3>
+            <p className="text-gray-300 mb-4">
+              Sign up now and get 20% off your first purchase!
+            </p>
+            <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded">
+              Sign up now
             </button>
           </div>
+
+          {/* Customer Service Section */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Customer services</h3>
+            <address className="text-gray-300 not-italic mb-4">
+              MBK Tower 30th Floor, 444 Phaya Thai Rd,
+              <br />
+              Wang Mai, Pathum Wan, Bangkok 10330
+            </address>
+            <p className="text-gray-300 mb-4">Email: jane.doe@realmail.com</p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-yellow-500"
+              />
+              <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded">
+                Subscribe
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="container mx-auto px-4 mt-8 pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
-        <p className="text-sm text-gray-400 mb-4 md:mb-0">
-          Copyright © 2024 All rights reserved for all contents.
-        </p>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-400">Powered by</span>
-          <img src="/path-to-shopify-logo.png" alt="Shopify" className="h-6" />
-          <img src="/path-to-wdb-logo.png" alt="WDB" className="h-6" />
+
+        {/* Bottom Section */}
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
+          <p>© 2024 All rights reserved by WDB.</p>
+          <p className="mt-2">Powered by Skooldio</p>
         </div>
       </div>
     </footer>
