@@ -64,7 +64,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Link to={`/product/${product.id}`}>
+    <Link to={`/product/${product.permalink}`}>
       <div className="relative max-w-sm rounded overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300">
         <div className="aspect-square w-full overflow-hidden bg-gray-100 relative">
           <img
