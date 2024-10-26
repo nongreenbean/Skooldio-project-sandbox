@@ -1,16 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { CategoryProvider } from "./context/CategoryContext";
-import { CollectionProvider } from "./context/CollectionContext";
 import App from "./App";
-import "./index.css";
+import "./index.css"; // ที่นี่จะ import Tailwind's base styles
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CategoryProvider>
-      <CollectionProvider>
-        <App />
-      </CollectionProvider>
-    </CategoryProvider>
+    <App />
   </React.StrictMode>
 );
