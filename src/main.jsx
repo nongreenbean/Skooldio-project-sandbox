@@ -1,23 +1,16 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
-import Womencloth from "./page/Woman-cloth.jsx";
-
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { CategoryProvider } from "./context/CategoryContext";
+import { CollectionProvider } from "./context/CollectionContext";
+import App from "./App";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/womencloth",
-    element: <Womencloth />,
-  },
-]);
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={router} />{" "}
-  </StrictMode>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <CategoryProvider>
+      <CollectionProvider>
+        <App />
+      </CollectionProvider>
+    </CategoryProvider>
+  </React.StrictMode>
 );
