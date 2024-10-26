@@ -112,8 +112,9 @@ export default function ProductList() {
   };
 
   return (
-    <main>
-      <div className="flex justify-between items-center mb-6 px-6">
+    <div>
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">
           {getCategoryTitle(getCategoryFromPath(location.pathname))}
         </h1>
@@ -124,12 +125,13 @@ export default function ProductList() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-    </main>
+    </div>
   );
 }
 

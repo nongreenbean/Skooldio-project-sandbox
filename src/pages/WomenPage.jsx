@@ -29,9 +29,16 @@ const WomenPage = () => {
   }
 
   return (
-    <div>
-      <Sidebar />
-      <ProductList products={products} />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar สำหรับหน้าจอใหญ่ */}
+      <div className="hidden md:block w-64 flex-shrink-0">
+        <div className="sticky top-0 h-screen overflow-y-auto border-r bg-white">
+          <Sidebar />
+        </div>
+      </div>
+      <div>
+        <ProductList products={products} />
+      </div>
     </div>
   );
 };
