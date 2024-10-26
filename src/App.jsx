@@ -10,8 +10,9 @@ import CategoryPage from "./components/CategoryPage";
 import CollectionPage from "./components/CollectionPage";
 import ProductDetail from "./components/ProductDetails";
 import KidsComingSoon from "./pages/KidsComingSoon";
+import ProductCard from "./components/ProductCard"; // from branch Pae
 
-const App = () => {
+function App() {
   return (
     <Router>
       <CategoryProvider>
@@ -39,11 +40,13 @@ const App = () => {
               </Routes>
               <Footer />
             </div>
+            <h1 className="text-3xl font-bold ">Hello World</h1> {/* from branch Pae */}
+            <ProductCard /> {/* from branch Pae */}
           </ProductProvider>
         </CollectionProvider>
       </CategoryProvider>
     </Router>
   );
-};
+}
 
 export default App;
