@@ -22,21 +22,26 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-black text-white shadow-md">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold">
-            WDB
-          </Link>
+          {
+            // this controls the header stuff, at first it's in three, now it's two
+            // try collapsing nav(line 32) and div(line 52)
+          }
           <nav className="hidden md:block">
-            <ul className="flex space-x-6">
+            <ul className="flex space-x-6 items-center">
+              <Link to="/" className="text-2xl font-bold flex gap-2">
+                <img src="/WDBLogo.png"></img>
+                WDB
+              </Link>
               {!loading &&
                 !error &&
                 navItems.map((item) => (
                   <li key={item.permalink}>
                     <Link
                       to={`/${item.permalink}`}
-                      className="text-gray-600 hover:text-gray-900"
+                      className=" hover:text-gray-400/75"
                     >
                       {item.name}
                     </Link>
@@ -45,15 +50,15 @@ const Header = () => {
             </ul>
           </nav>
           <div className="flex items-center space-x-4">
-            <MagnifyingGlassIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
-            <HeartIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
-            <UserIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
-            <ShoppingBagIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
+            <MagnifyingGlassIcon className="w-6 h-6  cursor-pointer" />
+            <HeartIcon className="w-6 h-6  cursor-pointer" />
+            <UserIcon className="w-6 h-6  cursor-pointer" />
+            <ShoppingBagIcon className="w-6 h-6  cursor-pointer" />
             <button
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <Bars3Icon className="w-6 h-6 text-gray-600" />
+              <Bars3Icon className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -67,7 +72,7 @@ const Header = () => {
                 <li key={item.permalink}>
                   <Link
                     to={`/${item.permalink}`}
-                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+                    className="block px-4 py-2  hover:bg-gray-500"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
