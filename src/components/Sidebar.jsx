@@ -19,11 +19,12 @@ const Sidebar = () => {
   const [collectionsOpen, setCollectionsOpen] = useState(true);
   const location = useLocation();
 
+  const currentPath = location.pathname;
+  const isOnMenPage = currentPath.startsWith("/men");
+  const isOnWomenPage = currentPath.startsWith("/women");
+
   const toggleCategories = () => setCategoriesOpen(!categoriesOpen);
   const toggleCollections = () => setCollectionsOpen(!collectionsOpen);
-
-  const isOnMenPage = location.pathname === "/men";
-  const isOnWomenPage = location.pathname === "/women";
 
   const getSubcategories = () => {
     if (isOnMenPage || isOnWomenPage) {
@@ -41,6 +42,20 @@ const Sidebar = () => {
       }
     }
     return categories.filter((cat) => cat.parentId === null);
+  };
+
+  const getCategoryLink = (category) => {
+    const baseCategory = isOnWomenPage ? "women" : "men";
+
+    if (category.permalink === "shoes") {
+      return `/${baseCategory}/${baseCategory}-shoes`;
+    }
+
+    if (category.permalink.includes("shoes")) {
+      return `/${baseCategory}/${category.permalink}`;
+    }
+
+    return `/${category.permalink}`;
   };
 
   const displayCategories = getSubcategories();
@@ -68,7 +83,7 @@ const Sidebar = () => {
               displayCategories.map((category) => (
                 <li key={category.id} className="mb-2">
                   <Link
-                    to={`/${category.permalink}`}
+                    to={getCategoryLink(category)}
                     className="text-gray-600 hover:text-gray-900"
                   >
                     {category.name}

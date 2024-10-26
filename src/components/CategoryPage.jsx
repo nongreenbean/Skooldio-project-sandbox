@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useCategories } from "../context/CategoryContext";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Sidebar from "./Sidebar";
-import ProductGrid from "./ProductGrid";
+import ProductGrid from "./ProductGrid.jsx";
 
 const CategoryPage = () => {
   const {
@@ -17,7 +17,10 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const categorySlug = location.pathname.slice(1); // Remove the leading slash
+  // Get the full path and split it into segments
+  const pathSegments = location.pathname.slice(1).split("/");
+  const mainCategory = pathSegments[0];
+  const subCategory = pathSegments[1];
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -28,13 +31,24 @@ const CategoryPage = () => {
         let apiUrl = "https://api.storefront.wdb.skooldio.dev/products";
         let categoryParam = "";
 
-        if (categorySlug === "men") {
+        // Handle different category scenarios
+        if (mainCategory === "men" && !subCategory) {
           categoryParam = "all-men";
-        } else if (categorySlug === "women") {
+        } else if (mainCategory === "women" && !subCategory) {
           categoryParam = "all-ladies";
+        } else if (
+          subCategory === "men-shoes" ||
+          mainCategory === "men-shoes"
+        ) {
+          categoryParam = "men-shoes";
+        } else if (
+          subCategory === "women-shoes" ||
+          mainCategory === "women-shoes"
+        ) {
+          categoryParam = "women-shoes";
         } else {
           const category = categories.find(
-            (cat) => cat.permalink === categorySlug
+            (cat) => cat.permalink === mainCategory
           );
           if (category) {
             categoryParam = category.permalink;
@@ -72,7 +86,13 @@ const CategoryPage = () => {
     };
 
     fetchProducts();
-  }, [categories, categoriesLoading, categoriesError, categorySlug]);
+  }, [
+    categories,
+    categoriesLoading,
+    categoriesError,
+    mainCategory,
+    subCategory,
+  ]);
 
   if (categoriesLoading || loading) {
     return <div className="text-center py-8">Loading...</div>;
@@ -86,14 +106,24 @@ const CategoryPage = () => {
     );
   }
 
-  const pageTitle =
-    categorySlug === "men"
-      ? "Men"
-      : categorySlug === "women"
-      ? "Women"
-      : categories.find((cat) => cat.permalink === categorySlug)?.name ||
-        "All Products";
+  // Determine page title based on category
+  const getPageTitle = () => {
+    if (subCategory === "men-shoes" || mainCategory === "men-shoes") {
+      return "Men's Shoes";
+    }
+    if (subCategory === "women-shoes" || mainCategory === "women-shoes") {
+      return "Women's Shoes";
+    }
+    if (mainCategory === "men") return "Men";
+    if (mainCategory === "women") return "Women";
 
+    return (
+      categories.find((cat) => cat.permalink === mainCategory)?.name ||
+      "All Products"
+    );
+  };
+
+  const pageTitle = getPageTitle();
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (

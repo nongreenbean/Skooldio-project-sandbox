@@ -5,7 +5,7 @@ import { CollectionProvider } from "./context/CollectionContext";
 import { ProductProvider } from "./context/ProductContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import HomePage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import CategoryPage from "./components/CategoryPage";
 import CollectionPage from "./components/CollectionPage";
 import ProductDetail from "./components/ProductDetails";
@@ -28,6 +28,10 @@ const App = () => {
                 <Route path="/men" element={<CategoryPage />} />
                 <Route path="/women" element={<CategoryPage />} />
                 <Route path="/kids" element={<KidsComingSoon />} />
+                <Route path="/men/men-shoes" element={<CategoryPage />} />
+                <Route path="/women/women-shoes" element={<CategoryPage />} />
+                <Route path="/men-shoes" element={<CategoryPage />} />
+                <Route path="/women-shoes" element={<CategoryPage />} />
                 <Route path="/shoes" element={<CategoryPage />} />
                 <Route path="/accessories" element={<CategoryPage />} />
                 <Route path="/:categorySlug" element={<CategoryPage />} />
