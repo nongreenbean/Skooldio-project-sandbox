@@ -11,7 +11,7 @@ const WomenPage = () => {
       setLoading(true);
       try {
         const res = await fetch(
-          "https://api.storefront.wdb.skooldio.dev/products?ladies"
+          "https://api.storefront.wdb.skooldio.dev/products/?categories=all-ladies"
         );
         const resp = await res.json();
         setProducts(resp.data);
@@ -30,7 +30,7 @@ const WomenPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar สำหรับหน้าจอใหญ่ */}
+      {/* Sidebar for larger screens */}
       <div className="hidden md:block w-64 flex-shrink-0">
         <div className="sticky top-0 h-screen overflow-y-auto border-r bg-white">
           <Sidebar />

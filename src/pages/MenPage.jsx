@@ -11,7 +11,7 @@ const MenPage = () => {
       setLoading(true);
       try {
         const res = await fetch(
-          "https://api.storefront.wdb.skooldio.dev/products?men"
+          "https://api.storefront.wdb.skooldio.dev/products/?categories=all-men"
         );
         const resp = await res.json();
         setProducts(resp.data);
