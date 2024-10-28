@@ -1,149 +1,222 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+  Bars3Icon,
+} from "@heroicons/react/24/outline";
 
 const Sidebar = () => {
-  // State เก็บสถานะการเปิด/ปิดของแต่ละเมนู
-  const [expandedMenus, setExpandedMenus] = useState({
-    tops: true,
-    bottoms: false,
-    dresses: false,
-    accessories: false,
-    collections: false,
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({
+    categories: true,
+    collections: true,
   });
 
-  // ฟังก์ชันสำหรับ toggle เมนู
-  const toggleMenu = (menuKey) => {
-    setExpandedMenus((prev) => ({
+  const location = useLocation();
+
+  const isWomenSection =
+    location.pathname.includes("/women") ||
+    location.state?.from === "women" ||
+    location.pathname.includes("/category/women");
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
       ...prev,
-      [menuKey]: !prev[menuKey],
+      [section]: !prev[section],
     }));
   };
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          "https://api.storefront.wdb.skooldio.dev/categories"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const filteredCategories =
+          data?.data?.filter((cat) =>
+            isWomenSection
+              ? cat.name.toLowerCase().includes("women")
+              : cat.name.toLowerCase().includes("men")
+          ) || [];
+        setCategories(filteredCategories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setError("Failed to load categories. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, [isWomenSection]);
+
+  const mainCategories = isWomenSection
+    ? [
+        { id: "all-women", name: "All Women", permalink: "women" },
+        { id: "women-shoes", name: "Shoes", permalink: "shoes" },
+        { id: "women-shirts", name: "Shirts", permalink: "shirts" },
+        {
+          id: "women-accessories",
+          name: "Accessories",
+          permalink: "accessories",
+        },
+      ]
+    : [
+        { id: "all-men", name: "All Men", permalink: "men" },
+        { id: "men-shoes", name: "Shoes", permalink: "shoes" },
+        { id: "men-shirts", name: "Shirts", permalink: "shirts" },
+        {
+          id: "men-accessories",
+          name: "Accessories",
+          permalink: "accessories",
+        },
+      ];
+
+  const SidebarContent = () => (
+    <div className="p-4">
+      {/* Categories Section */}
+      <div className="mb-6">
+        <div
+          className="flex items-center justify-between cursor-pointer mb-4"
+          onClick={() => toggleSection("categories")}
+        >
+          <h3 className="font-poppins font-bold text-[32px]">Categories</h3>
+          {expandedSections.categories ? (
+            <ChevronUpIcon className="h-5 w-5" />
+          ) : (
+            <ChevronDownIcon className="h-5 w-5" />
+          )}
+        </div>
+        {expandedSections.categories && (
+          <ul className="space-y-4">
+            {mainCategories.map((category) => (
+              <li key={category.id}>
+                <Link
+                  to={
+                    category.permalink === "women" ||
+                    category.permalink === "men"
+                      ? `/${category.permalink}`
+                      : `/category/${isWomenSection ? "women" : "men"}/${
+                          category.permalink
+                        }`
+                  }
+                  className="block text-gray-600 hover:bg-[#C1CD00] px-4 py-2 w-full"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {category.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Collections Section */}
+      <div className="mb-6">
+        <div
+          className="flex items-center justify-between cursor-pointer mb-4"
+          onClick={() => toggleSection("collections")}
+        >
+          <h3 className="font-poppins font-bold text-[32px]">Collections</h3>
+          {expandedSections.collections ? (
+            <ChevronUpIcon className="h-5 w-5" />
+          ) : (
+            <ChevronDownIcon className="h-5 w-5" />
+          )}
+        </div>
+        {expandedSections.collections && (
+          <ul className="space-y-4">
+            <li>
+              <Link
+                to="/collections/new-arrivals"
+                state={{ from: isWomenSection ? "women" : "men" }}
+                className="block text-gray-600 hover:bg-[#C1CD00] px-4 py-2 w-full"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                New Arrivals
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/collections/price-down"
+                state={{ from: isWomenSection ? "women" : "men" }}
+                className="block text-gray-600 hover:bg-[#C1CD00] px-4 py-2 w-full"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Sale
+              </Link>
+            </li>
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <aside className="p-4">
+        <div className="animate-pulse space-y-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-8 bg-gray-200 rounded"></div>
+          ))}
+        </div>
+      </aside>
+    );
+  }
+
+  if (error) {
+    return (
+      <aside className="p-4">
+        <div className="text-red-500">{error}</div>
+      </aside>
+    );
+  }
+
   return (
-    <aside>
-      {/* Tops Menu */}
-      <div>
-        <div onClick={() => toggleMenu("tops")}>
-          <h3>Tops</h3>
-          <span>{expandedMenus.tops ? "−" : "+"}</span>
-        </div>
-        {expandedMenus.tops && (
-          <ul>
-            <li>
-              <Link to="/women/tops/all">All Items</Link>
-            </li>
-            <li>
-              <Link to="/women/tops/tshirts">T-Shirts</Link>
-            </li>
-            <li>
-              <Link to="/women/tops/cardigans">Cardigans</Link>
-            </li>
-            <li>
-              <Link to="/women/tops/knitwear">Knitwear & Sweaters</Link>
-            </li>
-            <li>
-              <Link to="/women/tops/hoodies">Sweatshirts & Hoodies</Link>
-            </li>
-            <li>
-              <Link to="/women/tops/fleece">Fleece</Link>
-            </li>
-          </ul>
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-md shadow-lg"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? (
+          <XMarkIcon className="h-6 w-6" />
+        ) : (
+          <Bars3Icon className="h-6 w-6" />
         )}
-      </div>
+      </button>
 
-      {/* Bottoms Menu */}
-      <div>
-        <div onClick={() => toggleMenu("bottoms")}>
-          <h3>Bottoms</h3>
-          <span>{expandedMenus.bottoms ? "−" : "+"}</span>
-        </div>
-        {expandedMenus.bottoms && (
-          <ul>
-            <li>
-              <Link to="/women/bottoms/all">All Bottoms</Link>
-            </li>
-            <li>
-              <Link to="/women/bottoms/pants">Pants</Link>
-            </li>
-            <li>
-              <Link to="/women/bottoms/skirts">Skirts</Link>
-            </li>
-            <li>
-              <Link to="/women/bottoms/shorts">Shorts</Link>
-            </li>
-          </ul>
-        )}
-      </div>
+      {/* Mobile Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white transform transition-transform duration-300 ease-in-out md:hidden ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <SidebarContent />
+      </aside>
 
-      {/* Dress & Jumpsuits Menu */}
-      <div>
-        <div onClick={() => toggleMenu("dresses")}>
-          <h3>Dress & Jumpsuits</h3>
-          <span>{expandedMenus.dresses ? "−" : "+"}</span>
-        </div>
-        {expandedMenus.dresses && (
-          <ul>
-            <li>
-              <Link to="/women/dresses/all">All Dresses</Link>
-            </li>
-            <li>
-              <Link to="/women/dresses/casual">Casual Dresses</Link>
-            </li>
-            <li>
-              <Link to="/women/dresses/formal">Formal Dresses</Link>
-            </li>
-            <li>
-              <Link to="/women/dresses/jumpsuits">Jumpsuits</Link>
-            </li>
-          </ul>
-        )}
-      </div>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:block">
+        <SidebarContent />
+      </aside>
 
-      {/* Accessories Menu */}
-      <div>
-        <div onClick={() => toggleMenu("accessories")}>
-          <h3>Accessories</h3>
-          <span>{expandedMenus.accessories ? "−" : "+"}</span>
-        </div>
-        {expandedMenus.accessories && (
-          <ul>
-            <li>
-              <Link to="/women/accessories/all">All Accessories</Link>
-            </li>
-            <li>
-              <Link to="/women/accessories/bags">Bags</Link>
-            </li>
-            <li>
-              <Link to="/women/accessories/jewelry">Jewelry</Link>
-            </li>
-            <li>
-              <Link to="/women/accessories/belts">Belts</Link>
-            </li>
-          </ul>
-        )}
-      </div>
-
-      {/* Collections Menu */}
-      <div>
-        <div onClick={() => toggleMenu("collections")}>
-          <h3>Collections</h3>
-          <span>{expandedMenus.collections ? "−" : "+"}</span>
-        </div>
-        {expandedMenus.collections && (
-          <ul>
-            <li>
-              <Link to="/women/collections/new">New Arrivals</Link>
-            </li>
-            <li>
-              <Link to="/women/collections/bestsellers">Best Sellers</Link>
-            </li>
-            <li>
-              <Link to="/women/collections/sale">Sale</Link>
-            </li>
-          </ul>
-        )}
-      </div>
-    </aside>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
