@@ -1,4 +1,3 @@
-// src/components/ProductList.jsx
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ProductCard from "./ProductCard";
@@ -140,9 +139,7 @@ function ProductCardSkeleton() {
     <div className="relative max-w-sm rounded overflow-hidden bg-white">
       <div className="aspect-square w-full bg-gray-200 animate-pulse"></div>
       <div className="p-4 space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-1/4 animate-pulse"></div>
-        <div className="h-6 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+        <div className="h-4  rounded w-1/4 animate-pulse"></div>
         <div className="flex space-x-1">
           {[...Array(5)].map((_, i) => (
             <div

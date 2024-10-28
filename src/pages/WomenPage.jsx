@@ -29,10 +29,10 @@ const WomenPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen">
       {/* Sidebar สำหรับหน้าจอใหญ่ */}
       <div className="hidden md:block w-64 flex-shrink-0">
-        <div className="sticky top-0 h-screen overflow-y-auto border-r bg-white">
+        <div className="sticky top-0 h-screen overflow-y-auto border-r bg-red-500">
           <Sidebar />
         </div>
       </div>
