@@ -1,9 +1,7 @@
-import Sidebar from "../components/Sidebar";
-
 const Home = () => {
   return (
     <div>
-      <Sidebar />
+      <h1>HOMEEEE PAGEEE</h1>
     </div>
   );
 };

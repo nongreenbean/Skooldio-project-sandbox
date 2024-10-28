@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 // =============================================
 // 1️⃣ ส่วนกำหนดค่าคงที่และการ Map ข้อมูล
@@ -41,6 +42,8 @@ export default function ProductList({ products: propProducts }) {
   const [products, setProducts] = useState(propProducts || []); // เก็บข้อมูลสินค้า
   const [loading, setLoading] = useState(!propProducts); // สถานะกำลังโหลด
   const [error, setError] = useState(null); // เก็บข้อผิดพลาด
+  const [selectedSort, setSelectedSort] = useState("price-low");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // ดึงข้อมูลจาก URL
   const location = useLocation();
@@ -124,10 +127,34 @@ export default function ProductList({ products: propProducts }) {
     }
   };
 
-  const handleSort = (e) => {
-    const sortedProducts = sortProducts(e.target.value);
+  const handleSort = (sortBy) => {
+    const sortedProducts = sortProducts(sortBy);
     setProducts(sortedProducts);
   };
+  const sortOptions = [
+    { value: "price-low", label: "Price - Low to high" },
+    { value: "price-high", label: "Price - High to low" },
+    { value: "best-seller", label: "Best seller" },
+  ];
+
+  // Function to handle sort selection
+  const handleSortSelect = (value) => {
+    setSelectedSort(value);
+    handleSort(value);
+    setIsDropdownOpen(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".sort-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // =============================================
   // 5️⃣ ส่วนการดึงข้อมูลจาก API
@@ -183,57 +210,92 @@ export default function ProductList({ products: propProducts }) {
   // =============================================
 
   // แสดง Loading
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-        {[...Array(8)].map((_, index) => (
-          <ProductCardSkeleton key={index} />
-        ))}
-      </div>
-    );
-  }
-
-  // แสดงข้อผิดพลาด
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        <div className="text-lg">{error}</div>
-      </div>
-    );
-  }
-
-  // แสดงกรณีไม่มีสินค้า
-  if (!products || products.length === 0) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg">No products found</div>
-      </div>
-    );
-  }
-
-  // แสดงรายการสินค้า
   return (
-    <div className="p-6">
-      {/* ส่วนหัวของหน้า */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{getPageTitle()}</h1>
-        <select
-          className="border p-2 rounded"
-          onChange={handleSort}
-          defaultValue="price-low"
-        >
-          <option value="price-low">Price - Low to high</option>
-          <option value="price-high">Price - High to low</option>
-          <option value="best-seller">Best seller</option>
-        </select>
+    <div className="w-full min-h-screen bg-white">
+      {/* Header section */}
+      <div className="p-4 md:p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl md:text-2xl font-bold">{getPageTitle()}</h1>
+
+          {/* Custom Sort Dropdown */}
+          <div className="relative sort-dropdown">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded hover:border-gray-300 focus:outline-none"
+            >
+              <span>Sort by</span>
+              <ChevronDownIcon
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
+                {sortOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => handleSortSelect(option.value)}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                      selectedSort === option.value ? "bg-gray-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* Radio circle */}
+                      <div className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center">
+                        {selectedSort === option.value && (
+                          <div className="w-2 h-2 rounded-full bg-black" />
+                        )}
+                      </div>
+                      {option.label}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* แสดงรายการสินค้าแบบ Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {/* แสดง Loading */}
+      {loading && (
+        <div className="px-4 md:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {[...Array(8)].map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* แสดง Error */}
+      {error && (
+        <div className="flex justify-center items-center min-h-[200px] text-red-500">
+          <div className="text-lg">{error}</div>
+        </div>
+      )}
+
+      {/* แสดงกรณีไม่มีสินค้า */}
+      {!loading && !error && (!products || products.length === 0) && (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <div className="text-lg">No products found</div>
+        </div>
+      )}
+
+      {/* แสดงรายการสินค้า */}
+      {!loading && !error && products && products.length > 0 && (
+        <div className="px-4 md:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="w-full">
+                <ProductCard product={product} className="h-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -243,21 +305,34 @@ export default function ProductList({ products: propProducts }) {
 // =============================================
 function ProductCardSkeleton() {
   return (
-    <div className="relative max-w-sm rounded overflow-hidden bg-white">
-      <div className="aspect-square w-full bg-gray-200 animate-pulse"></div>
+    <div className="relative bg-white rounded-lg overflow-hidden shadow-sm">
+      {/* รูปภาพ skeleton */}
+      <div className="relative pt-[100%] bg-gray-200 animate-pulse" />
+
+      {/* ข้อมูลสินค้า skeleton */}
       <div className="p-4 space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-1/4 animate-pulse"></div>
-        <div className="h-6 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+        {/* ชื่อสินค้า */}
+        <div className="h-4 md:h-5 bg-gray-200 rounded w-3/4 animate-pulse" />
+
+        {/* คำอธิบาย */}
+        <div className="h-3 md:h-4 bg-gray-200 rounded w-full animate-pulse" />
+        <div className="h-3 md:h-4 bg-gray-200 rounded w-2/3 animate-pulse" />
+
+        {/* Rating */}
         <div className="flex space-x-1">
           {[...Array(5)].map((_, i) => (
             <div
               key={i}
-              className="w-4 h-4 bg-gray-200 rounded animate-pulse"
-            ></div>
+              className="w-4 h-4 md:w-5 md:h-5 bg-gray-200 rounded animate-pulse"
+            />
           ))}
         </div>
-        <div className="h-6 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+
+        {/* ราคา */}
+        <div className="flex items-center gap-2">
+          <div className="h-5 md:h-6 bg-gray-200 rounded w-24 md:w-28 animate-pulse" />
+          <div className="h-4 md:h-5 bg-gray-200 rounded w-16 md:w-20 animate-pulse" />
+        </div>
       </div>
     </div>
   );
