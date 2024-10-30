@@ -79,9 +79,6 @@ export default function ProductCard({ product }) {
         </div>
 
         <div className="mt-4 flex flex-col px-4 pb-4">
-          <div className="text-xs text-gray-500 mb-1">
-            SKU: {product.skuCode}
-          </div>
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
             {product.name}
           </h3>
