@@ -67,7 +67,9 @@ const Navbar = () => {
           <button className="hover:text-gray-300">Search</button>
           <button className="hover:text-gray-300">Wishlist</button>
           <button className="hover:text-gray-300">Account</button>
-          <button className="hover:text-gray-300">Cart</button>
+          <Link to="/cart" className="hover:text-gray-300">
+            Cart
+          </Link>{" "}
         </div>
       </nav>
 
@@ -98,7 +100,7 @@ const Navbar = () => {
             <img src={Logo} alt="WDB Logo" className="h-[37px] w-[91px]" />
           </Link>
 
-          <button className="text-white">
+          <Link to="/cart" className="text-white">
             {/* Cart Icon */}
             <svg
               className="w-6 h-6"
@@ -113,7 +115,7 @@ const Navbar = () => {
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu */}
