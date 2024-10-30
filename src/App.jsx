@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 import CategoryLayout from "./components/CategoryLayout";
 import Home from "./pages/Home";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 
 // import other components as needed
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="shoes" element={<CategoryLayout />} />
           <Route path="accessories" element={<CategoryLayout />} />
           <Route path="product/:permalink" element={<ProductDetailPage />} />
+          <Route path="cart" element={<CartPage />} />
 
           {/* Subcategory routes */}
           <Route
