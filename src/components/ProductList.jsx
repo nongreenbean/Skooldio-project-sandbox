@@ -131,6 +131,7 @@ export default function ProductList({ products: propProducts }) {
     const sortedProducts = sortProducts(sortBy);
     setProducts(sortedProducts);
   };
+
   const sortOptions = [
     { value: "price-low", label: "Price - Low to high" },
     { value: "price-high", label: "Price - High to low" },
@@ -138,6 +139,7 @@ export default function ProductList({ products: propProducts }) {
   ];
 
   // Function to handle sort selection
+
   const handleSortSelect = (value) => {
     setSelectedSort(value);
     handleSort(value);
@@ -145,6 +147,7 @@ export default function ProductList({ products: propProducts }) {
   };
 
   // Close dropdown when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".sort-dropdown")) {
