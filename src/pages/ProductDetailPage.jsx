@@ -1,49 +1,37 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useCart } from "../components/CartContext";
 
-// ImageGallery Component
+// Simplified ImageGallery Component
 const ImageGallery = ({ images, price, promotionalPrice }) => {
   const [mainImageIndex, setMainImageIndex] = useState(0);
-
-  // Calculate discount percentage using the actual prices from API
-  const calculateDiscount = () => {
-    // From API: price = 2000.00, promotionalPrice = 1000.00
+  const discountPercentage = useMemo(() => {
     if (!price || !promotionalPrice) return null;
-    const discount = ((price - promotionalPrice) / price) * 100;
-    return Math.round(discount); // This will give us 50% for the example
-  };
+    return Math.round(((price - promotionalPrice) / price) * 100);
+  }, [price, promotionalPrice]);
 
-  const discountPercentage = calculateDiscount();
-
-  useEffect(() => {
-    setMainImageIndex(0);
-  }, [images]);
-
-  const handlePrev = () => {
-    setMainImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setMainImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  if (!images || images.length === 0) {
+  if (!images?.length) {
     return (
-      <div className="w-full max-w-[576px] h-auto aspect-[576/597] bg-gray-100 rounded-lg overflow-hidden">
-        <div className="flex items-center justify-center h-full">
-          No image available
-        </div>
+      <div className="w-full max-w-[576px] h-auto aspect-[576/597] bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+        No image available
       </div>
     );
   }
 
+  const navigate = (direction) => {
+    setMainImageIndex((prev) =>
+      direction === "next"
+        ? prev === images.length - 1
+          ? 0
+          : prev + 1
+        : prev === 0
+        ? images.length - 1
+        : prev - 1
+    );
+  };
+
   return (
     <div className="space-y-3">
-      {/* Main Image with Discount Badge */}
       <div className="relative w-full max-w-[576px] h-auto aspect-[576/597] bg-gray-100 rounded-lg overflow-hidden">
         {discountPercentage > 0 && (
           <div className="absolute top-0 right-0 bg-[#EF4444] text-white px-4 py-2 text-sm font-medium">
@@ -55,20 +43,18 @@ const ImageGallery = ({ images, price, promotionalPrice }) => {
           alt="Product"
           className="w-full h-full object-contain"
         />
-        <button
-          onClick={handlePrev}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 hover:bg-opacity-100 px-[15px] py-2 rounded-full"
-        >
-          &lt;
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 hover:bg-opacity-100 px-[15px] py-2 rounded-full"
-        >
-          &gt;
-        </button>
+        {["prev", "next"].map((direction) => (
+          <button
+            key={direction}
+            onClick={() => navigate(direction)}
+            className={`absolute ${
+              direction === "prev" ? "left-4" : "right-4"
+            } top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 hover:bg-opacity-100 px-[15px] py-2 rounded-full`}
+          >
+            {direction === "prev" ? "<" : ">"}
+          </button>
+        ))}
       </div>
-      {/* Thumbnails */}
       <div className="w-full max-w-[576px] flex gap-3">
         {images.map((image, index) => (
           <button
@@ -90,40 +76,28 @@ const ImageGallery = ({ images, price, promotionalPrice }) => {
   );
 };
 
-// ColorSelector Component
+// Simplified ColorSelector Component
 const ColorSelector = ({ variants, selectedColor, onColorSelect }) => {
-  if (!variants || variants.length === 0) return null;
+  if (!variants?.length) return null;
 
-  // Get unique colors
-  const uniqueColors = Array.from(
-    new Set(variants.map((variant) => variant.color))
-  ).map((color) => {
-    const variant = variants.find((v) => v.color === color);
-    return {
-      color: variant.color,
-      colorCode: variant.colorCode,
-    };
-  });
+  const uniqueColors = [...new Set(variants.map((v) => v.color))].map((color) =>
+    variants.find((v) => v.color === color)
+  );
 
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">Color</label>
       <div className="flex space-x-4">
-        {uniqueColors.map((variant) => (
-          <div
-            key={variant.color}
-            className="flex flex-col items-center space-y-1"
-          >
+        {uniqueColors.map(({ color, colorCode }) => (
+          <div key={color} className="flex flex-col items-center space-y-1">
             <button
-              onClick={() => onColorSelect(variant.color)}
+              onClick={() => onColorSelect(color)}
               className={`w-8 h-8 rounded-full ${
-                selectedColor === variant.color
-                  ? "ring-2 ring-black ring-offset-2"
-                  : ""
+                selectedColor === color ? "ring-2 ring-black ring-offset-2" : ""
               }`}
-              style={{ backgroundColor: variant.colorCode }}
+              style={{ backgroundColor: colorCode }}
             />
-            <span className="text-xs text-gray-600">{variant.color}</span>
+            <span className="text-xs text-gray-600">{color}</span>
           </div>
         ))}
       </div>
@@ -221,35 +195,33 @@ const QuantitySelector = ({ quantity, onQuantityChange }) => {
   );
 };
 
-// Rating Component
-const Rating = ({ rating }) => {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
-
-  return (
-    <div className="flex items-center">
-      {[...Array(5)].map((_, index) => (
-        <span key={index} className="text-2xl">
-          {index < fullStars ? (
-            <span style={{ color: "#DEF81C" }}>★</span>
-          ) : index === fullStars && hasHalfStar ? (
-            <span style={{ color: "#DEF81C" }}>★</span>
-          ) : (
-            <span style={{ color: "#d1d5db" }}>★</span>
-          )}
-        </span>
-      ))}
-      {Number.isInteger(rating) && (
-        <span className="ml-2 text-gray-600">({rating})</span>
-      )}
-    </div>
-  );
-};
+// Simplified Rating Component
+const Rating = ({ rating }) => (
+  <div className="flex items-center">
+    {[...Array(5)].map((_, i) => (
+      <span
+        key={i}
+        className="text-2xl"
+        style={{
+          color:
+            i < Math.floor(rating) ||
+            (i === Math.floor(rating) && rating % 1 >= 0.5)
+              ? "#DEF81C"
+              : "#d1d5db",
+        }}
+      >
+        ★
+      </span>
+    ))}
+    {Number.isInteger(rating) && (
+      <span className="ml-2 text-gray-600">({rating})</span>
+    )}
+  </div>
+);
 
 // RelatedProducts Component
-const RelatedProducts = ({ currentProductId }) => {
+const RelatedProducts = ({ currentProductId, currentCategories }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRelatedProducts = async () => {
@@ -257,50 +229,87 @@ const RelatedProducts = ({ currentProductId }) => {
         const response = await fetch(
           "https://api.storefront.wdb.skooldio.dev/products/"
         );
-        const { data } = await response.json();
-        if (data && Array.isArray(data)) {
-          const filtered = data
-            .filter((p) => p.id !== currentProductId)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 4);
-          setRelatedProducts(filtered);
-        }
+        const data = await response.json();
+
+        const related = data.data.filter(
+          (product) =>
+            product.id !== currentProductId &&
+            product.categories.some((category) =>
+              currentCategories.includes(category)
+            )
+        );
+
+        const shuffled = related.sort(() => 0.5 - Math.random());
+        setRelatedProducts(shuffled.slice(0, 4));
       } catch (error) {
         console.error("Error fetching related products:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchRelatedProducts();
-  }, [currentProductId]);
+    if (currentCategories?.length) {
+      fetchRelatedProducts();
+    }
+  }, [currentProductId, currentCategories]);
 
-  if (loading) return <div>Loading related products...</div>;
   if (relatedProducts.length === 0) return null;
 
   return (
-    <div className="mt-16">
-      <h2 className="text-2xl font-bold mb-8">People also like these</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div className="mt-16 px-[1px]">
+      <h2 className="text-2xl font-bold mb-8 font-poppins">
+        People also like these
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {relatedProducts.map((product) => (
           <Link
             key={product.id}
             to={`/product/${product.permalink}`}
             className="group"
           >
-            <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden">
-              {product.imageUrls && product.imageUrls.length > 0 && (
-                <img
-                  src={product.imageUrls[0]}
-                  alt={product.name}
-                  className="w-full h-full object-center object-cover group-hover:opacity-75"
-                />
+            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              {product.price !== product.promotionalPrice && (
+                <div className="absolute top-0 right-0 bg-[#EF4444] text-white px-4 py-2 text-sm font-medium z-10">
+                  -
+                  {Math.round(
+                    ((product.price - product.promotionalPrice) /
+                      product.price) *
+                      100
+                  )}
+                  %
+                </div>
               )}
+              <img
+                src={product.imageUrls[0]}
+                alt={product.name}
+                className="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity"
+              />
             </div>
-            <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-            <p className="mt-1 text-lg font-medium text-gray-900">
-              THB {product.promotionalPrice.toFixed(2)}
-            </p>
+            <div className="mt-4">
+              <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                {product.name}
+              </h3>
+              <p className="text-sm text-gray-500 mb-2 line-clamp-2">
+                {product.description}
+              </p>
+              <div className="flex items-center mb-2">
+                {product.ratings && <Rating rating={product.ratings} />}
+              </div>
+              <div className="text-right">
+                {product.price !== product.promotionalPrice ? (
+                  <>
+                    <p className="text-sm line-through text-gray-500">
+                      THB {product.price.toLocaleString()}
+                    </p>
+                    <p className="text-lg font-bold text-[#FF000D]">
+                      THB {product.promotionalPrice.toLocaleString()}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-lg font-bold">
+                    THB {product.price.toLocaleString()}
+                  </p>
+                )}
+              </div>
+            </div>
           </Link>
         ))}
       </div>
@@ -308,46 +317,100 @@ const RelatedProducts = ({ currentProductId }) => {
   );
 };
 
-// Add this new component for the heart icon
-const WishlistButton = ({ isWishlisted, onClick }) => {
-  if (isWishlisted) {
-    return (
-      <button
-        onClick={onClick}
-        className="text-red-500 hover:text-red-600 transition-colors"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-6 h-6"
-        >
-          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-        </svg>
-      </button>
-    );
-  }
+// Simplified WishlistButton Component
+const WishlistButton = ({ isWishlisted, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`transition-colors ${
+      isWishlisted
+        ? "text-red-500 hover:text-red-600"
+        : "text-gray-400 hover:text-red-500"
+    }`}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className="w-6 h-6"
+      {...(isWishlisted
+        ? { fill: "currentColor" }
+        : { fill: "none", stroke: "currentColor", strokeWidth: 1.5 })}
+    >
+      <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+    </svg>
+  </button>
+);
+
+// CartNotification Component
+const CartNotification = ({
+  product,
+  quantity,
+  selectedColor,
+  selectedSize,
+  onClose,
+}) => {
+  const navigate = useNavigate();
+  const unitPrice = product.promotionalPrice || product.price;
+  const totalPrice = unitPrice * quantity;
+
+  const handleViewCart = () => {
+    onClose();
+    navigate("/cart");
+  };
 
   return (
-    <button
-      onClick={onClick}
-      className="text-gray-400 hover:text-red-500 transition-colors"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-6 h-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-        />
-      </svg>
-    </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Items added to your cart</h2>
+          <button onClick={onClose} className="text-2xl">
+            &times;
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-6">
+            <img
+              src={product.imageUrls[0]}
+              alt={product.name}
+              className="w-32 h-32 object-cover"
+            />
+            <div>
+              <h3 className="text-xl font-bold mb-2">{product.name}</h3>
+              <div className="text-gray-600 space-y-1">
+                <p>QTY : {quantity}</p>
+                {selectedColor && <p>Color : {selectedColor}</p>}
+                {selectedSize && <p>Size : {selectedSize}</p>}
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-xl font-bold">
+              THB {totalPrice.toLocaleString()}
+            </div>
+            {quantity > 1 && (
+              <div className="text-sm text-gray-500">
+                (THB {unitPrice.toLocaleString()} × {quantity})
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={onClose}
+            className="w-full py-3 border border-black text-center"
+          >
+            Continue shopping
+          </button>
+          <button
+            onClick={handleViewCart}
+            className="w-full py-3 bg-[#15192C] text-white text-center"
+          >
+            View cart
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -361,6 +424,8 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { permalink } = useParams();
+  const [showCartNotification, setShowCartNotification] = useState(false);
+  const { addToCart } = useCart();
 
   // Reset quantity when color or size changes
   useEffect(() => {
@@ -472,16 +537,151 @@ const ProductDetail = () => {
   const hasSizes = product.variants?.some((variant) => variant.size !== "");
 
   const handleAddToCart = () => {
-    console.log("Added to cart:", {
+    // Log the product data before adding to cart
+    console.log("Product before adding to cart:", {
       product,
-      color: selectedColor,
-      size: selectedSize,
-      quantity,
+      colors: product.colors,
+      sizes: product.sizes,
     });
+
+    addToCart(product, quantity, selectedColor, selectedSize);
+    setShowCartNotification(true);
   };
 
+  if (showCartNotification) {
+    return (
+      <>
+        <div className="max-w-7xl mx-auto px-[124px] py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left column - Image Gallery */}
+            <div className="w-full">
+              <ImageGallery
+                images={product.imageUrls}
+                price={product.price}
+                promotionalPrice={product.promotionalPrice}
+              />
+            </div>
+
+            {/* Right column - Product Info */}
+            <div className="space-y-6 w-full max-w-[577px]">
+              <div className="flex justify-between items-center w-full">
+                <div className="text-sm text-gray-500">
+                  ID: {product.skuCode}
+                </div>
+                <WishlistButton
+                  isWishlisted={isWishlisted}
+                  onClick={() => setIsWishlisted(!isWishlisted)}
+                />
+              </div>
+
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold break-words">
+                  {product.name}
+                </h1>
+                <p className="text-gray-600 mt-2 break-words">
+                  {product.description}
+                </p>
+              </div>
+
+              {/* Price Display */}
+              <div>
+                {product.price !== product.promotionalPrice ? (
+                  // Show promotional price with red background when there's a discount
+                  <>
+                    <div className="bg-[#FF000D] text-white px-4 py-2 inline-block">
+                      <span className="font-[ui-sans-serif,system-ui,sans-serif] text-[40px] font-bold leading-[60px]">
+                        THB {product.promotionalPrice}
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      From{" "}
+                      <span className="line-through">THB {product.price}</span>
+                    </div>
+                  </>
+                ) : (
+                  // Show normal price without background when there's no discount
+                  <div className="inline-block">
+                    <span className="font-[ui-sans-serif,system-ui,sans-serif] text-[40px] font-bold leading-[60px] text-black">
+                      THB {product.price}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {product.ratings && <Rating rating={product.ratings} />}
+              {product.variants && product.variants.length > 0 && (
+                <ColorSelector
+                  variants={product.variants}
+                  selectedColor={selectedColor}
+                  onColorSelect={handleColorSelect}
+                />
+              )}
+              {hasSizes && (
+                <SizeSelector
+                  variants={product.variants}
+                  selectedColor={selectedColor}
+                  selectedSize={selectedSize}
+                  onSizeSelect={handleSizeSelect}
+                />
+              )}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Qty.
+                </label>
+                {currentRemains > 0 ? (
+                  <select
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    className="border border-gray-300 rounded-sm px-4 py-2 w-32"
+                  >
+                    {[...Array(currentRemains)].map((_, index) => (
+                      <option key={index + 1} value={index + 1}>
+                        {index + 1}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-red-500 text-sm">Out of stock</p>
+                )}
+              </div>
+              {/* Add to cart button */}
+              <button
+                onClick={handleAddToCart}
+                disabled={!selectedVariant || currentRemains === 0}
+                className={`w-full h-[54px] rounded-sm ${
+                  !selectedVariant || currentRemains === 0
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-[#15192C] hover:bg-[#1e2340]"
+                } text-white`}
+              >
+                {currentRemains === 0 ? "Out of Stock" : "Add to cart"}
+              </button>
+            </div>
+          </div>
+
+          {/* Related Products Section */}
+          <div className="mt-16">
+            {product && (
+              <RelatedProducts
+                currentProductId={product.id}
+                currentCategories={product.categories}
+              />
+            )}
+          </div>
+        </div>
+        <CartNotification
+          product={product}
+          quantity={quantity}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
+          onClose={() => setShowCartNotification(false)}
+        />
+      </>
+    );
+  }
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-[124px] py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left column - Image Gallery */}
         <div className="w-full">
@@ -588,7 +788,12 @@ const ProductDetail = () => {
 
       {/* Related Products Section */}
       <div className="mt-16">
-        {product && <RelatedProducts currentProductId={product.id} />}
+        {product && (
+          <RelatedProducts
+            currentProductId={product.id}
+            currentCategories={product.categories}
+          />
+        )}
       </div>
     </div>
   );
