@@ -1,45 +1,43 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { CategoryProvider } from "./context/CategoryContext";
-import { CollectionProvider } from "./context/CollectionContext";
-import { ProductProvider } from "./context/ProductContext";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import HomePage from "./pages/Homepage";
-import CategoryPage from "./components/CategoryPage";
-import CollectionPage from "./components/CollectionPage";
-import ProductDetail from "./components/ProductDetails";
-import KidsComingSoon from "./pages/KidsComingSoon";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import CategoryLayout from "./components/CategoryLayout";
+import Home from "./pages/Home";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 
-const App = () => {
+// import other components as needed
+
+function App() {
   return (
     <Router>
-      <CategoryProvider>
-        <CollectionProvider>
-          <ProductProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route
-                  path="/collections/:collectionSlug"
-                  element={<CollectionPage />}
-                />
-                <Route path="/men" element={<CategoryPage />} />
-                <Route path="/women" element={<CategoryPage />} />
-                <Route path="/kids" element={<KidsComingSoon />} />
-                <Route path="/shoes" element={<CategoryPage />} />
-                <Route path="/accessories" element={<CategoryPage />} />
-                <Route path="/:categorySlug" element={<CategoryPage />} />
-                <Route path="/product/:permalink" element={<ProductDetail />} />
-              </Routes>
-              <Footer />
-            </div>
-          </ProductProvider>
-        </CollectionProvider>
-      </CategoryProvider>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* Homepage */}
+          <Route index element={<Home />} />
+
+          {/* Main category routes */}
+          <Route path="men" element={<CategoryLayout />} />
+          <Route path="women" element={<CategoryLayout />} />
+          <Route path="kids" element={<CategoryLayout />} />
+          <Route path="shoes" element={<CategoryLayout />} />
+          <Route path="accessories" element={<CategoryLayout />} />
+          <Route path="product/:permalink" element={<ProductDetailPage />} />
+          <Route path="cart" element={<CartPage />} />
+
+          {/* Subcategory routes */}
+          <Route
+            path="category/:gender/:categoryId"
+            element={<CategoryLayout />}
+          />
+
+          {/* Collection routes */}
+          <Route path="collections/:collection" element={<CategoryLayout />} />
+
+          {/* Add other routes as needed */}
+        </Route>
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;
