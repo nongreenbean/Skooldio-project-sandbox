@@ -41,7 +41,7 @@ const Footer = () => {
             <p className="text-gray-300 mb-4">
               Sign up now and get 20% off your first purchase!
             </p>
-            <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded">
+            <button className="bg-[#C1CD00] hover:bg-[#bfcd00c1] text-black font-semibold py-2 px-4 rounded">
               Sign up now
             </button>
           </div>
@@ -61,7 +61,7 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-yellow-500"
               />
-              <button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded">
+              <button className="bg-[#C1CD00] hover:bg-[#bfcd00c1] text-black font-semibold py-2 px-4 rounded">
                 Subscribe
               </button>
             </div>

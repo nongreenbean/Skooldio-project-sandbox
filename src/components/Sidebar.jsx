@@ -82,14 +82,14 @@ const Sidebar = () => {
       ];
 
   const SidebarContent = () => (
-    <div className="p-4">
+    <div className="pt-8 p-4">
       {/* Categories Section */}
       <div className="mb-6">
         <div
           className="flex items-center justify-between cursor-pointer mb-4"
           onClick={() => toggleSection("categories")}
         >
-          <h3 className="font-poppins font-bold text-[32px]">Categories</h3>
+          <h3 className="font-poppins font-bold text-[18px]">Categories</h3>
           {expandedSections.categories ? (
             <ChevronUpIcon className="h-5 w-5" />
           ) : (
@@ -126,7 +126,7 @@ const Sidebar = () => {
           className="flex items-center justify-between cursor-pointer mb-4"
           onClick={() => toggleSection("collections")}
         >
-          <h3 className="font-poppins font-bold text-[32px]">Collections</h3>
+          <h3 className="font-poppins font-bold text-[18px]">Collections</h3>
           {expandedSections.collections ? (
             <ChevronUpIcon className="h-5 w-5" />
           ) : (
