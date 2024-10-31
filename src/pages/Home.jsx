@@ -76,14 +76,14 @@ export default function Component() {
           <div className="grid md:grid-cols-2 gap-4">
             <div className="relative group overflow-hidden rounded-lg">
               <img
-                src="./src/assets/Catalogue2.svg"
+                src="https://raw.githubusercontent.com/nongreenbean/Skooldio-project-sandbox/81a70070fb797604109fb5a68af99d46fd00f904/src/assets/Catalogue2.svg"
                 alt="Cozy breeze collection"
                 className="w-full h-auto object-contain transition-transform group-hover:scale-105"
               />
             </div>
             <div className="relative group overflow-hidden rounded-lg">
               <img
-                src="./src/assets/Catalogue3.svg"
+                src="https://raw.githubusercontent.com/nongreenbean/Skooldio-project-sandbox/81a70070fb797604109fb5a68af99d46fd00f904/src/assets/Catalogue3.svg"
                 alt="Flexi Move collection"
                 className="w-full h-auto object-contain transition-transform group-hover:scale-105"
               />
