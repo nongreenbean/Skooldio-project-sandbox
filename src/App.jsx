@@ -1,29 +1,15 @@
-<<<<<<< Updated upstream
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-=======
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./components/CartContext";
->>>>>>> Stashed changes
 import Layout from "./components/Layout";
+import CategoryLayout from "./components/CategoryLayout";
 import Home from "./pages/Home";
-import MenPage from "./pages/MenPage";
-import WomenPage from "./pages/WomenPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
+import { CartProvider } from "./components/CartContext";
 
-const App = () => {
+// import other components as needed
+
+function App() {
   return (
-<<<<<<< Updated upstream
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="men" element={<MenPage />} />
-          <Route path="women" element={<WomenPage />} />
-          <Route path="product/:permalink" element={<ProductDetailPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-=======
     <CartProvider>
       <Router>
         <Routes>
@@ -57,8 +43,7 @@ const App = () => {
         </Routes>
       </Router>
     </CartProvider>
->>>>>>> Stashed changes
   );
-};
+}
 
 export default App;
