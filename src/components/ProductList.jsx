@@ -147,7 +147,7 @@ export default function ProductList({ products: propProducts }) {
   };
 
   // Close dropdown when clicking outside
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".sort-dropdown")) {
@@ -224,7 +224,7 @@ export default function ProductList({ products: propProducts }) {
           <div className="relative sort-dropdown">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 rounded hover:border-gray-300 focus:outline-none"
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-[#C1CD00] rounded hover:border-[#bfcd00c1] focus:outline-none"
             >
               <span>Sort by</span>
               <ChevronDownIcon
@@ -241,15 +241,15 @@ export default function ProductList({ products: propProducts }) {
                   <button
                     key={option.value}
                     onClick={() => handleSortSelect(option.value)}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${
                       selectedSort === option.value ? "bg-gray-50" : ""
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       {/* Radio circle */}
-                      <div className="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full border border-[#C1CD00] flex items-center justify-center">
                         {selectedSort === option.value && (
-                          <div className="w-2 h-2 rounded-full bg-black" />
+                          <div className="w-2 h-2 rounded-full bg-[#C1CD00]" />
                         )}
                       </div>
                       {option.label}
@@ -290,7 +290,7 @@ export default function ProductList({ products: propProducts }) {
       {/* แสดงรายการสินค้า */}
       {!loading && !error && products && products.length > 0 && (
         <div className="px-4 md:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-8">
             {products.map((product) => (
               <div key={product.id} className="w-full">
                 <ProductCard product={product} className="h-full" />

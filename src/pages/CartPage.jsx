@@ -45,7 +45,7 @@ const CartPage = () => {
 
   // 4. ส่วนแสดงข้อความตะกร้าว่าง
   const EmptyCartMessage = () => (
-    <div className="flex flex-col items-center justify-center py-8 md:py-16 px-4">
+    <div className="flex flex-col items-center justify-center py-8 md:py-16 px-4 bg-gray-50 rounded-lg">
       {/* ไอคอนตะกร้า */}
       <div className="w-32 h-32 md:w-48 md:h-48 mb-4 md:mb-6">
         <svg
@@ -64,19 +64,18 @@ const CartPage = () => {
       </div>
       {/* ข้อความ */}
       <h3 className="text-lg md:text-xl font-semibold mb-2">
-        ตะกร้าของคุณว่างเปล่า
+        Your cart is empty
       </h3>
       <p className="text-gray-500 text-center text-sm md:text-base mb-4 md:mb-6">
-        ดูเหมือนว่าคุณยังไม่ได้เพิ่มสินค้าในตะกร้า
-        <br />
-        ลองเลือกดูสินค้าของเราได้เลย
+        Looks like you have not added anything to your cart. <br />
+        Go ahead & explore top categories.
       </p>
       {/* ปุ่มเลือกซื้อสินค้า */}
       <Link
         to="/"
         className="bg-black text-white px-4 py-2 text-sm md:px-6 md:py-3 md:text-base rounded"
       >
-        เลือกซื้อสินค้า
+        Continue shopping
       </Link>
     </div>
   );
@@ -88,7 +87,7 @@ const CartPage = () => {
       <div className="space-y-3 md:space-y-4 text-sm md:text-base">
         {/* แต่ละรายการ */}
         <div className="flex justify-between">
-          <span className="text-gray-600">ไม่มีสินค้า</span>
+          <span className="text-gray-600">No item</span>
           <span>0.00</span>
         </div>
         {/* ... รายการอื่นๆ ... */}
@@ -99,7 +98,7 @@ const CartPage = () => {
         disabled
         className="w-full bg-gray-200 text-gray-400 py-2 md:py-3 rounded mt-4 md:mt-6 text-sm md:text-base cursor-not-allowed"
       >
-        ชำระเงิน
+        Check out
       </button>
 
       {/* ปุ่มเลือกซื้อสินค้าต่อ */}
@@ -107,7 +106,7 @@ const CartPage = () => {
         to="/"
         className="w-full block text-center text-gray-600 py-2 md:py-3 mt-2 md:mt-3 border border-gray-300 rounded text-sm md:text-base"
       >
-        เลือกซื้อสินค้าต่อ
+        Continue shopping
       </Link>
     </div>
   );
@@ -126,25 +125,23 @@ const CartPage = () => {
     <div className="min-h-screen bg-white">
       <div className="w-full px-4 pb-6 md:pb-8">
         {/* หัวข้อ (ซ่อนบนมือถือ) */}
-        <h1 className="hidden md:block text-2xl font-bold mb-8">
-          ตะกร้าของฉัน
+        <h1 className="hidden md:block text-2xl font-bold mb-8 mt-8">
+          My cart
         </h1>
 
         {/* กริดหลัก */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 max-w-[1440px] mx-auto">
           {/* ส่วนรายการสินค้า */}
           <div className="lg:col-span-2">
-            <h2 className="text-base md:text-lg font-medium mb-4">
-              รายการสินค้า
-            </h2>
+            <h2 className="text-base md:text-lg font-medium mb-4">Items</h2>
             <EmptyCartMessage />
           </div>
 
           {/* ส่วนสรุปราคา */}
           <div className="lg:col-span-1">
             <h2 className="text-base md:text-lg font-medium mb-4 flex justify-between items-center">
-              <span>สรุปรายการ</span>
-              <span className="text-gray-500 text-sm">0 ชิ้น</span>
+              <span>Summary</span>
+              <span className="text-gray-500 text-sm pr-6">0 items</span>
             </h2>
             <CartSummary />
           </div>
@@ -153,7 +150,7 @@ const CartPage = () => {
         {/* ส่วนสินค้าแนะนำ */}
         <div className="mt-8 md:mt-16">
           <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-8">
-            สินค้าที่คุณอาจสนใจ
+            People also like these
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {isLoading ? (

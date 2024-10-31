@@ -73,7 +73,7 @@ export default function ProductCard({ product }) {
           />
           {getDiscountPercentage() > 0 && (
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-sm font-semibold rounded">
-              ลด {getDiscountPercentage()}%
+              - {getDiscountPercentage()}%
             </div>
           )}
         </div>
