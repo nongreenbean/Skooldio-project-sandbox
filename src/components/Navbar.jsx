@@ -1,6 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Logo from "../assets/Logo.svg";
+import {
+  MagnifyingGlassIcon,
+  HeartIcon,
+  UserIcon,
+  ShoppingBagIcon,
+  Bars3Icon,
+} from "@heroicons/react/24/outline";
 
 const Navbar = () => {
   const location = useLocation();
@@ -63,13 +70,23 @@ const Navbar = () => {
             </Link>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <button className="hover:text-gray-300">Search</button>
-          <button className="hover:text-gray-300">Wishlist</button>
-          <button className="hover:text-gray-300">Account</button>
+        <div className="flex items-center gap-6">
+          <button className="hover:text-gray-300">
+            <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Search</span>
+          </button>
+          <button className="hover:text-gray-300">
+            <HeartIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Wishlist</span>
+          </button>
+          <button className="hover:text-gray-300">
+            <UserIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Account</span>
+          </button>
           <Link to="/cart" className="hover:text-gray-300">
-            Cart
-          </Link>{" "}
+            <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Cart</span>
+          </Link>
         </div>
       </nav>
 
@@ -80,20 +97,8 @@ const Navbar = () => {
             className="text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {/* Hamburger Icon */}
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Menu</span>
           </button>
 
           <Link to="/" className="flex items-center">
@@ -101,20 +106,8 @@ const Navbar = () => {
           </Link>
 
           <Link to="/cart" className="text-white">
-            {/* Cart Icon */}
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
+            <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="sr-only">Cart</span>
           </Link>
         </div>
 
@@ -185,10 +178,22 @@ const Navbar = () => {
                 Accessories
               </Link>
               <div className="border-t border-gray-700 pt-4 flex flex-col gap-4">
-                <button className="text-left py-2">Search</button>
-                <button className="text-left py-2">Wishlist</button>
-                <button className="text-left py-2">Account</button>
-                <button className="text-left py-2">Cart</button>
+                <button className="text-left py-2 flex items-center gap-3">
+                  <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+                  Search
+                </button>
+                <button className="text-left py-2 flex items-center gap-3">
+                  <HeartIcon className="h-6 w-6" aria-hidden="true" />
+                  Wishlist
+                </button>
+                <button className="text-left py-2 flex items-center gap-3">
+                  <UserIcon className="h-6 w-6" aria-hidden="true" />
+                  Account
+                </button>
+                <button className="text-left py-2 flex items-center gap-3">
+                  <ShoppingBagIcon className="h-6 w-6" aria-hidden="true" />
+                  Cart
+                </button>
               </div>
             </div>
           </div>

@@ -33,7 +33,7 @@ const ImageGallery = ({ images, price, promotionalPrice }) => {
 
   return (
     <div className="space-y-3">
-      <div className="relative w-full max-w-[576px] h-auto aspect-[576/597] bg-gray-100 rounded-lg overflow-hidden">
+      <div className="relative w-full max-w-[576px] h-auto aspect-[576/597] bg-gray-100  overflow-hidden">
         {discountPercentage > 0 && (
           <div className="absolute top-0 right-0 bg-[#EF4444] text-white px-4 py-2 text-sm font-medium">
             -{discountPercentage}%
