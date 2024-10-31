@@ -49,7 +49,7 @@ export default function Component() {
       {/* Hero Section */}
       <div className="relative h-[400px] md:h-[500px] overflow-hidden">
         <img
-          src="./src/assets/Rectangle 2957.svg"
+          src="https://raw.githubusercontent.com/nongreenbean/Skooldio-project-sandbox/ba527d509febaea398a155cb0d1c47ed39024975/src/assets/Rectangle%202957.svg"
           alt="People wearing casual fashion"
           className="w-full h-full object-cover"
         />
