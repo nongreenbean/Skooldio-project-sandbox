@@ -260,7 +260,7 @@ const Navbar = () => {
                 className="flex items-center text-gray-600"
               >
                 <ChevronLeftIcon className="h-6 w-6 mr-2" />
-                Back
+                {/* Back */}
               </button>
             )}
             <span className="text-lg font-medium">{getCurrentMenuTitle()}</span>
@@ -268,7 +268,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               className="text-gray-600"
             >
-              <svg
+              {/* <svg
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
@@ -280,7 +280,7 @@ const Navbar = () => {
                   strokeWidth={2}
                   d="M6 18L18 6M6 6l12 12"
                 />
-              </svg>
+              </svg> */}
             </button>
           </div>
 
