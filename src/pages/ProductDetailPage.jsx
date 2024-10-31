@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCart } from "../components/CartContext";
+import ProductCard from "../components/ProductCard";
 
 // Simplified ImageGallery Component
 const ImageGallery = ({ images, price, promotionalPrice }) => {
@@ -260,57 +261,7 @@ const RelatedProducts = ({ currentProductId, currentCategories }) => {
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {relatedProducts.map((product) => (
-          <Link
-            key={product.id}
-            to={`/product/${product.permalink}`}
-            className="group"
-          >
-            <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-              {product.price !== product.promotionalPrice && (
-                <div className="absolute top-0 right-0 bg-[#EF4444] text-white px-4 py-2 text-sm font-medium z-10">
-                  -
-                  {Math.round(
-                    ((product.price - product.promotionalPrice) /
-                      product.price) *
-                      100
-                  )}
-                  %
-                </div>
-              )}
-              <img
-                src={product.imageUrls[0]}
-                alt={product.name}
-                className="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity"
-              />
-            </div>
-            <div className="mt-4">
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                {product.name}
-              </h3>
-              <p className="text-sm text-gray-500 mb-2 line-clamp-2">
-                {product.description}
-              </p>
-              <div className="flex items-center mb-2">
-                {product.ratings && <Rating rating={product.ratings} />}
-              </div>
-              <div className="text-right">
-                {product.price !== product.promotionalPrice ? (
-                  <>
-                    <p className="text-sm line-through text-gray-500">
-                      THB {product.price.toLocaleString()}
-                    </p>
-                    <p className="text-lg font-bold text-[#FF000D]">
-                      THB {product.promotionalPrice.toLocaleString()}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-lg font-bold">
-                    THB {product.price.toLocaleString()}
-                  </p>
-                )}
-              </div>
-            </div>
-          </Link>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>
