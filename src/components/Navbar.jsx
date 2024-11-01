@@ -68,6 +68,17 @@ const Navbar = () => {
     }
   };
 
+  const getLinkUrl = (item, parentCategory = null) => {
+    if (["shoes", "kids", "accessories"].includes(item.id) && !parentCategory) {
+      return `/${item.id}`;
+    }
+    if (item.title === "All Men") return "/men";
+    if (item.title === "All Women") return "/women";
+    return parentCategory
+      ? `/category/${parentCategory}/${item.id}`
+      : `/${item.id}`;
+  };
+
   return (
     <div className="w-full bg-[#1A1A1A] relative z-50">
       {/* Desktop Navigation */}
@@ -80,13 +91,13 @@ const Navbar = () => {
             {menuItems.main.map((item) => (
               <div key={item.id} className="relative group">
                 <Link
-                  to={`/${item.id}`}
+                  to={getLinkUrl(item)}
                   className={`${
-                    activeLink === `${item.id}`
+                    activeLink === getLinkUrl(item)
                       ? "text-[#DEF81C]"
                       : "text-white"
                   } hover:text-gray-300 group`}
-                  onClick={() => setActiveLink(`${item.id}`)} // updated the URL stuff
+                  onClick={() => setActiveLink(getLinkUrl(item))}
                 >
                   {item.title}
                 </Link>
@@ -95,23 +106,11 @@ const Navbar = () => {
                     {menuItems[item.id].map((subItem) => (
                       <Link
                         key={subItem.id}
-                        to={
-                          subItem.title === "All Men"
-                            ? "/men"
-                            : subItem.title === "All Women"
-                            ? "/women"
-                            : `/category/${item.id}/${subItem.id}`
-                        } // Added "category" prefix for subsections
+                        to={getLinkUrl(subItem, item.id)}
                         className="block px-4 py-2 hover:bg-gray-100"
-                        onClick={() => {
-                          if (subItem.title === "All Men") {
-                            setActiveLink("/men");
-                          } else if (subItem.title === "All Women") {
-                            setActiveLink("/women");
-                          } else {
-                            setActiveLink(`/category/${item.id}/${subItem.id}`);
-                          }
-                        }}
+                        onClick={() =>
+                          setActiveLink(getLinkUrl(subItem, item.id))
+                        }
                       >
                         {subItem.title}
                       </Link>
@@ -320,11 +319,19 @@ const Navbar = () => {
                   </button>
                 ) : (
                   <Link
-                    to={`/category/${currentMenu}/${item.id}`} // Added "category" prefix for subsections
+                    to={getLinkUrl(
+                      item,
+                      currentMenu !== "main" ? currentMenu : null
+                    )}
                     className="block py-3 hover:bg-gray-100"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      setActiveLink(`/category/${currentMenu}/${item.id}`);
+                      setActiveLink(
+                        getLinkUrl(
+                          item,
+                          currentMenu !== "main" ? currentMenu : null
+                        )
+                      );
                     }}
                   >
                     {item.title}
